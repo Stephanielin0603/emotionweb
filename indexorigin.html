@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-Hant">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<head>
+  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>情緒氣象館 Emotion Weather Hub</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Noto Sans TC", sans-serif; margin: 24px; }
+    .row { display: flex; gap: 24px; flex-wrap: wrap; }
+    .panel { border: 1px solid #f8bbbb; border-radius: 12px; padding: 16px; min-width: 320px; flex: 1; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(90px, 1fr)); gap: 12px; }
+    .card { border: 1px solid #eee; border-radius: 12px; padding: 10px; cursor: pointer; text-align: center; }
+    .card.selected { outline: 3px solid #333; }
+    img.icon { width: 72px; height: 72px; object-fit: contain; display:block; margin: 0 auto 8px; }
+    .muted { color: #666; font-size: 14px; }
+    .big { font-size: 20px; font-weight: 700; }
+    #overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.65);
+      display: none; align-items: center; justify-content: center; color: #fff;
+      flex-direction: column; gap: 12px; z-index: 50;
+    }
+    #overlay .hint { font-size: 22px; }
+    #overlay .count { font-size: 56px; font-weight: 800; }
+    textarea { width: 100%; min-height: 140px; }
+  </style>
+</head>
+<body>
+  <div id="input-page" class="page">
+    <div style="text-align: center; font-family: sans-serif;">
+          <div class="big">情緒氣象館 Emotion Weather Hub</div>
+          <div class="muted">用天氣 + 情緒 + 心理季節，完成一次抽籤儀式。</div>
+          <div class="row" style="margin-top:16px;">
+          <div class="panel">
+          <div class="big">查詢當地天氣</div>
+          <div style="margin-top:10px;">
+            <div>城市：<input id="city" placeholder="例如: Taipei" /></div>
+            <button id="btnWeather" style="margin-top:10px;" onclick="search()">查詢天氣</button>
+            <div id="result" style="margin-top: 15px; font-weight: bold; color: #333;"></div>
+      
+            <pre id="weatherOut" style="white-space:pre-wrap;"></pre>
+          </div>
+          </div>
+          </div>
+    </div>
+    <div style="text-align: center; font-family: sans-serif;" class="panel">
+      <div class="big">當下情緒</div>
+      <div id="emotionGrid" class="grid" style="margin-top:10px;"></div>
+      <div style="margin-top:10px;">
+          <div style="margin-top:15px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+              <button class="emotion-btn" onclick="checkEmotion(this,'愉悅')" style="background: #FFF9C4; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">☀️</button>
+              <button class="emotion-btn" onclick="checkEmotion(this,'憂鬱')" style="background: #E1F5FE; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">🌧️</button>
+              <button class="emotion-btn" onclick="checkEmotion(this,'平靜')" style="background: #E8F5E9; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">🍃</button>
+              <button class="emotion-btn" onclick="checkEmotion(this,'焦慮')" style="background: #FFEBEE; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">🔥</button>
+          </div>
+        <div id="emotionAnalysis" style="margin-top: 2px; text-align: left; padding: 15px; border-radius: 8px; min-height: 60px;"></div>
+      </div>
+    </div>
+    <div style="text-align: center; font-family: sans-serif;" class="panel">
+      <div class="big">心理季節</div>
+      <div id="seasonGrid" class="grid" style="margin-top:10px; grid-template-columns: repeat(4, minmax(90px, 1fr));"></div>
+      <div style="margin-top:15px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+        <button class="season-btn" onclick="checkSeaon(this,'春')" style="background: #fcf087; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">☀️ 春</button>
+        <button class="season-btn" onclick="checkSeaon(this,'夏')" style="background: #f38d9c; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">☀️ 夏</button>
+        <button class="season-btn" onclick="checkSeaon(this,'秋')" style="background: #f7c79a; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">☀️ 秋</button>
+        <button class="season-btn" onclick="checkSeaon(this,'冬')" style="background: #aad5f3; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">☀️ 冬</button>
+
+      </div>
+    </div>
+    <div style="text-align: center; font-family: sans-serif;">
+      <button class="main-btn" onclick="generateRecommendation()">生成今日推薦</button>
+    </div>
+  </div>
+  <div id="result-page" class="page" style="display: none;">
+    <div class="result-card">
+        <h2 id="res-city"></h2>
+        <div id="res-weather"></div>
+        <hr>
+        <p id="res-recommendation"></p>
+        <button class="restart-btn"onclick="backToInput()" class="back-btn">重新測量</button>
+    </div>
+  </div>
+<script src="script.js"></script>
+</body>
+</html>

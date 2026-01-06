@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+  
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>情緒氣象館 Emotion Weather Hub</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <style>
+    body { font-family: system-ui, -apple-system, "Noto Sans TC", sans-serif; margin: 24px; background-color: #fffcf9; }
+    
+    /* 核心舞台控制 */
+    .stage-container { 
+      transition: opacity 0.6s ease-in-out; 
+      width: 100%; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 20px; 
+      margin-top: 50px;
+    }
+
+    /* 按鈕樣式補充 */
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; }
+    .emotion-btn, .season-btn { 
+      padding: 10px 20px; border: 1px solid #f8bbbb; border-radius: 20px; 
+      background: white; cursor: pointer; transition: 0.3s;
+    }
+    .emotion-btn.active, .season-btn.active { background: #f8bbbb; color: white; }
+    
+    .result-card { 
+      background: white; padding: 30px; border-radius: 20px; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; max-width: 500px; 
+    }
+  </style>
+</head>
+<body>
+
+    <div id="step-1" class="stage-container">
+        <h2>📍 第一步：尋找你的位置</h2>
+        <div class="panel">
+            <input type="text" id="city" placeholder="輸入城市（如：Taipei）" style="padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
+            <button class="main-btn" onclick="goToStep2()">確認並查看天氣</button>
+        </div>
+        <div id="result"></div> </div>
+
+    <div id="step-2" class="stage-container" style="display: none; opacity: 0;">
+        <h2>✨ 第二步：感受此刻靈魂</h2>
+        
+        <div class="panel">
+            <p class="muted">選擇你的心情：</p>
+            <div class="grid">
+                <button class="emotion-btn" onclick="checkEmotion(this, '愉悅')">😊 愉悅</button>
+                <button class="emotion-btn" onclick="checkEmotion(this, '憂鬱')">☁️ 憂鬱</button>
+                <button class="emotion-btn" onclick="checkEmotion(this, '平靜')">🍃 平靜</button>
+                <button class="emotion-btn" onclick="checkEmotion(this, '焦慮')">🔥 焦慮</button>
+            </div>
+
+            <p class="muted">選擇目前季節：</p>
+            <div class="grid">
+                <button class="season-btn" onclick="checkSeaon(this, '春')">🌸 春</button>
+                <button class="season-btn" onclick="checkSeaon(this, '夏')">☀️ 夏</button>
+                <button class="season-btn" onclick="checkSeaon(this, '秋')">🍂 秋</button>
+                <button class="season-btn" onclick="checkSeaon(this, '冬')">❄️ 冬</button>
+            </div>
+        </div>
+
+        <div id="display" style="font-weight: bold; color: #b5838d;"></div> 
+        <button class="main-btn" onclick="goToStep3()">生成今日推薦</button>
+    </div>
+
+    <div id="step-3" class="stage-container" style="display: none; opacity: 0;">
+        <div class="result-card">
+            <h3 id="res-city"></h3>
+            <p id="res-weather" class="muted"></p>
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+            <div id="res-recommendation"></div>
+            <button class="secondary-btn" onclick="backToStart()" style="margin-top: 25px;">重新開始儀式</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

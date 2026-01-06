@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>情緒氣象館 Emotion Weather Hub</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Noto Sans TC", sans-serif; margin: 24px; }
+    .row { display: flex; gap: 24px; flex-wrap: wrap; }
+    .panel { border: 1px solid #f8bbbb; border-radius: 12px; padding: 16px; min-width: 320px; flex: 1; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(90px, 1fr)); gap: 12px; }
+    .card { border: 1px solid #eee; border-radius: 12px; padding: 10px; cursor: pointer; text-align: center; }
+    .card.selected { outline: 3px solid #333; }
+    img.icon { width: 72px; height: 72px; object-fit: contain; display:block; margin: 0 auto 8px; }
+    .muted { color: #666; font-size: 14px; }
+    .big { font-size: 20px; font-weight: 700; }
+    #overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.65);
+      display: none; align-items: center; justify-content: center; color: #fff;
+      flex-direction: column; gap: 12px; z-index: 50;
+    }
+    #overlay .hint { font-size: 22px; }
+    #overlay .count { font-size: 56px; font-weight: 800; }
+    textarea { width: 100%; min-height: 140px; }
+  </style>
+</head>
+<body>
+  <div id="input-page" class="page">
+    <div style="text-align: center; font-family: sans-serif;">
+          <div class="big">情緒氣象館 Emotion Weather Hub</div>
+          <div class="muted">用天氣 + 情緒 + 心理季節，完成一次抽籤儀式。</div>
+          <div class="row" style="margin-top:16px;">
+          <div class="panel">
+          <div class="big">查詢當地天氣</div>
+          <div style="margin-top:10px;">
+            <div>城市：<input id="city" placeholder="例如: Taipei" /></div>
+            <button id="btnWeather" style="margin-top:10px;" onclick="search()">查詢天氣</button>
+            <div id="result" style="margin-top: 15px; font-weight: bold; color: #333;"></div>
+            <script>
+            async function search() {
+            const cityInput = document.getElementById('city').value.trim();
+            const resultDiv = document.getElementById('result');
+            
+            if (!cityInput) {
+                alert("請先輸入城市名稱");
+                return;
+            }
+            resultDiv.innerText = "正在搜尋城市位置...";
+
+            try {
+            // 1. 座標轉換 (Geocoding)
+                const geoUrl = `https://nominatim.openstreetmap.org/search?city=${cityInput}&format=json&limit=1`;
+                const geoRes = await fetch(geoUrl);
+                const geoData = await geoRes.json();
+                if (geoData.length === 0) {
+                    resultDiv.innerText = "❌ 找不到該城市，請嘗試輸入英文（如: Tokyo）";
+                    return;
+                }
+
+                const { lat, lon, display_name } = geoData[0];
+                const shortName = display_name.split(',')[0];
+            
+                resultDiv.innerText = `獲取 ${shortName} 氣象中...`;
+
+            // 2. 查詢 Open-Meteo 天氣資料
+                const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m&timezone=auto`;
+                const weatherRes = await fetch(weatherUrl);
+                const weatherData = await weatherRes.json();
+
+            // 3. 渲染結果
+                const temp = weatherData.current.temperature_2m;
+                const wind = weatherData.current.wind_speed_10m;
+                const time = new Date(weatherData.current.time).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
+                const humidity = weatherData.current.relative_humidity_2m;// 這裡就是濕度！
+                const humidityUnit = weatherData.current_units.relative_humidity_2m; // 這裡是單位 %
+
+                resultDiv.innerHTML = `
+                <div style="border-left: 4px solid #007bff; padding-left: 10px;">
+                    <div>📍 ${shortName}</div>
+                    <div style="font-size: 1.5em;">🌡️ ${temp}°C</div>
+                    <div style="font-size: 0.9em; color: #666;">💨 風速: ${wind} km/h  | 💧 濕度:${humidity}${humidityUnit} | 🕒 更新: ${time}</div>
+                </div>
+                `;
+            } catch (error) {
+                resultDiv.innerText = "⚠️ 查詢失敗，請檢查網路連線。";
+                console.error("Weather Error:", error);
+            }
+            }
+            </script>
+      
+            <pre id="weatherOut" style="white-space:pre-wrap;"></pre>
+          </div>
+          </div>
+          </div>
+    </div>
+    <div style="text-align: center; font-family: sans-serif;" class="panel">
+      <div class="big">當下情緒</div>
+      <div id="emotionGrid" class="grid" style="margin-top:10px;"></div>
+      <div style="margin-top:10px;">
+          <div style="margin-top:15px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+              <button class="emotion-btn" onclick="checkEmotion(this,'愉悅')" style="background: #FFF9C4; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">☀️</button>
+              <button class="emotion-btn" onclick="checkEmotion(this,'憂鬱')" style="background: #E1F5FE; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">🌧️</button>
+              <button class="emotion-btn" onclick="checkEmotion(this,'平靜')" style="background: #E8F5E9; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">🍃</button>
+              <button class="emotion-btn" onclick="checkEmotion(this,'焦慮')" style="background: #FFEBEE; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">🔥</button>
+          </div>
+        <div id="emotionAnalysis" style="margin-top: 2px; text-align: left; padding: 15px; border-radius: 8px; min-height: 60px;"></div>
+      </div>
+    </div>
+    <div style="text-align: center; font-family: sans-serif;" class="panel">
+      <div class="big">心理季節</div>
+      <div id="seasonGrid" class="grid" style="margin-top:10px; grid-template-columns: repeat(4, minmax(90px, 1fr));"></div>
+      <div style="margin-top:15px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+        <button class="season-btn" onclick="checkSeaon(this,'春')" style="background: #fcf087; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">☀️ 春</button>
+        <button class="season-btn" onclick="checkSeaon(this,'夏')" style="background: #f38d9c; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">☀️ 夏</button>
+        <button class="season-btn" onclick="checkSeaon(this,'秋')" style="background: #f7c79a; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">☀️ 秋</button>
+        <button class="season-btn" onclick="checkSeaon(this,'冬')" style="background: #aad5f3; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">☀️ 冬</button>
+
+      </div>
+    </div>
+  </div>
+  <div id="result-page" class="page" style="display: none;">
+    <div class="result-card">
+        <h2 id="res-city">Taipei</h2>
+        <div id="res-weather">🌡️ ${temp}°C / 💨 風速: ${wind} km/h  | 💧 濕度:${humidity}${humidityUnit}</div>
+        <hr>
+        <p id="res-recommendation">今日推薦：玫瑰與雪松</p>
+        <button onclick="backToInput()" class="back-btn">重新測量</button>
+    </div>
+  </div>
+  <button onclick="generateRecommendation()">生成今日推薦</button>
+<script src="script.js"></script>
+</body>
+</html>

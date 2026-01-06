@@ -1,0 +1,38 @@
+[
+  {
+    "id": 16,
+    "label": "第16籤",
+    "solar_term": "（你填節氣，例如：小寒）",
+    "group": "慢下來",
+    "state_desc": "此刻的你：疲倦、需要被安放。",
+    "actions": ["把今天的任務縮成 1 件", "去有窗光的地方坐 20 分鐘"],
+    "incense_texture": "柔霧",
+    "incense_notes": "檀香 × 淡煙草",
+    "place": "有窗光的咖啡廳",
+    "quote_templates": {
+      "spring": "在偏冷的日子裡，你不需要推進世界，只要讓自己被好好安放。",
+      "summer": "熱鬧不是唯一答案，今天的你值得一段安靜的光。",
+      "autumn": "把步伐放慢，你會聽見自己真正想要的方向。",
+      "winter": "慢一點，冬是今天最剛好的節奏。"
+    },
+    "icon": "/static/icons/fortunes/16.png"
+  },
+  {
+    "id": 1,
+    "label": "第1籤",
+    "solar_term": "（你填節氣，例如：立春）",
+    "group": "慢慢前進",
+    "state_desc": "此刻的你：有點猶豫，但正在靠近答案。",
+    "actions": ["寫下你想要的『下一步』", "先做 5 分鐘就好"],
+    "incense_texture": "清透",
+    "incense_notes": "柑橘 × 白茶",
+    "place": "河堤散步道",
+    "quote_templates": {
+      "spring": "你不必一下子抵達，走在路上就很好。",
+      "summer": "先啟動，再調整；你會越走越順。",
+      "autumn": "把選項減半，答案會變得更清楚。",
+      "winter": "就算慢，也是在前進。"
+    },
+    "icon": "/static/icons/fortunes/01.png"
+  }
+]

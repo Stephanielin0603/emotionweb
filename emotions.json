@@ -1,0 +1,8 @@
+[
+  {"id":"happy","label":"快樂","icon":"/static/icons/emotions/happy.png"},
+  {"id":"sad","label":"悲傷","icon":"/static/icons/emotions/sad.png"},
+  {"id":"angry","label":"憤怒","icon":"/static/icons/emotions/angry.png"},
+  {"id":"calm","label":"驚訝","icon":"/static/icons/emotions/surprised.png"},
+  {"id":"fear","label":"恐懼","icon":"/static/icons/emotions/fear.png"},
+  {"id":"disgust","label":"厭惡","icon":"/static/icons/emotions/disgust.png"}
+]

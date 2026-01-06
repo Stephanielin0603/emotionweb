@@ -1,0 +1,6 @@
+[
+  {"id":"spring","label":"春","icon":"/static/icons/seasons/spring.png"},
+  {"id":"summer","label":"夏","icon":"/static/icons/seasons/summer.png"},
+  {"id":"autumn","label":"秋","icon":"/static/icons/seasons/autumn.png"},
+  {"id":"winter","label":"冬","icon":"/static/icons/seasons/winter.png"}
+]

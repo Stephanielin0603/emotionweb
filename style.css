@@ -1,0 +1,125 @@
+body,button, input, select, textarea {
+    /* 優先使用蘋果與微軟的現代繁體字體，最後用無襯線字體保底 */
+    font-family: 'Noto Serif TC', serif !important;
+    -webkit-font-smoothing: antialiased; /* 讓字體在 Mac/iOS 上更平滑 */
+    line-height: 1.6; /* 增加行距，閱讀更舒服 */
+    color: #4a4a4a;   /* 不要用全黑，深灰色更有質感 */
+}
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    /* 這裡使用乾燥玫瑰、奶油白與薄荷綠的極淡漸層 */
+    background: linear-gradient(135deg, #fffcf9 0%, #f7d6d0 50%, #e0f2f1 100%);
+    background-attachment: fixed; /* 讓背景固定，捲動時更有層次感 */
+    font-family: 'Noto Serif TC', serif !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #4a4a4a;
+}
+
+/* 讓階段容器稍微浮起來，增加呼吸感 */
+.stage-container {
+    width: 90%;
+    max-width: 800px; /* 限制最大寬度，避免在電腦版太寬 */
+    background: rgba(255, 255, 255, 0.4); /* 半透明白色 */
+    backdrop-filter: blur(10px); /* 磨砂玻璃效果 */
+    padding: 40px;
+    border-radius: 30px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.03);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+body {
+    /* 修改背景大小，讓它有空間移動 */
+    background-size: 400% 400% !important;
+    animation: gradientMove 15s ease infinite;
+}
+
+/* 預設按鈕稍微透明一點 */
+.emotion-btn {
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    border: 2px solid transparent !important;
+    font-size: 1rem !important;
+    font-weight: 900 !important;
+}
+
+/* 當按鈕被加上 .active 類別時的樣子 */
+.emotion-btn.active {
+    opacity: 1;
+    transform: scale(1.05); /* 稍微放大一點點 */
+    border: 2px solid #333 !important; /* 加入深色邊框確認選中 */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.season-btn{
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    border: 2px solid transparent !important;
+    font-size: 1rem !important;
+    font-weight: 900 !important;
+}
+.season-btn.active{
+    opacity: 1;
+    transform: scale(1.05); /* 稍微放大一點點 */
+    border: 2px solid #333 !important; /* 加入深色邊框確認選中 */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.page {
+    transition: opacity 0.5s ease;
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* 讓結果頁跳出來的感覺更專業 */
+#result-page {
+    background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.main-btn {
+    background-color: #FFF9C4; /* 你原本想要的淺黃色 */
+    color: #636262;           /* 深灰色字，比純黑更有氣質 */
+    border: 1px solid #f8bbbb;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;         /* 變色時會慢慢變，不會閃一下 */
+}
+
+.restart-btn{
+    background-color: #FFF9C4; /* 你原本想要的淺黃色 */
+    color: #636262;           /* 深灰色字，比純黑更有氣質 */
+    border: 1px solid #feec72;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;     
+
+}
+/* 滑鼠移上去的效果 */
+.main-btn:hover {
+    background-color: #fce883; /* 顏色稍微變深 */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* 加一點點陰影 */
+}
+
+.stage-container {
+    transition: opacity 0.6s ease-in-out;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
